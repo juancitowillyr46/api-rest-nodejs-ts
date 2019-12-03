@@ -1,4 +1,5 @@
 import express from 'express';
+import userService from './users.services';
 
 class UsersController {
     public path = '/users';
@@ -13,27 +14,42 @@ class UsersController {
         this.router.get(this.path + '/:id', this.userGetById);
         this.router.post(this.path, this.userPost);
         this.router.put(this.path+ '/:id', this.userPut);
-        this.router.delete(this.path, this.userDelete);
+        this.router.delete(this.path+ '/:id', this.userDelete);
     }
 
-    userGetAll(req: express.Request, res: express.Response) {
-        return res.send({data: `GET All component Users`});
+    async userGetAll(req: express.Request, res: express.Response) {
+        let operationResult = await userService.userAll();
+        if(operationResult) {
+            return res.status(operationResult.statusCode).send({data: operationResult.data});
+        }
     }
 
-    userGetById(req: express.Request, res: express.Response) {
-        return res.send({data: `GET By Id component Users`});
+    async userGetById(req: express.Request, res: express.Response) {
+        let operationResult = await userService.userGetById(req.params.id);
+        if(operationResult) {
+            return res.status(operationResult.statusCode).send({data: operationResult.data});
+        }
     }
 
-    userPost(req: express.Request, res: express.Response) {
-        return res.send({data: `POST component Users`});
+    async userPost(req: express.Request, res: express.Response) {
+        let operationResult = await userService.userPost(req.body);
+        if(operationResult) {
+            return res.status(operationResult.statusCode).send({data: operationResult.data});
+        }
     }
 
-    userPut(req: express.Request, res: express.Response) {
-        return res.send({data: `PUT component Users`});
+    async userPut(req: express.Request, res: express.Response) {
+        let operationResult = await userService.userPut(req.params.id, req.body);
+        if(operationResult) {
+            return res.status(operationResult.statusCode).send({data: operationResult.data});
+        }
     }
 
-    userDelete(req: express.Request, res: express.Response) {
-        return res.send({data: `DELETE component Users`});
+    async userDelete(req: express.Request, res: express.Response) {
+        let operationResult = await userService.userDelete(req.params.id);
+        if(operationResult) {
+            return res.status(operationResult.statusCode).send({data: operationResult.data});
+        }
     }
 
 }
